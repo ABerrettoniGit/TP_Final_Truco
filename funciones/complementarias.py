@@ -5,25 +5,17 @@ def guardar_record(ruta_archivo: str, datos_del_juego: dict) -> bool:
     '''
     registros = leer_registros(ruta_archivo)
     ruta = f"E:/UTN PYGAME/archivos/{ruta_archivo}"
-    encontrado = False
 
     print(f"Datos del juego a guardar: {datos_del_juego}")
 
     for usuario in registros:
         if datos_del_juego["Nombre"] == usuario["Nombre"]: 
-            
             usuario["Partidas ganadas"] += datos_del_juego["Partidas ganadas"]
             usuario["Partidas perdidas"] += datos_del_juego["Partidas perdidas"]
             usuario["Partidas empatadas"] += datos_del_juego["Partidas empatadas"]
-            
-            encontrado = True
-            break
+        else:
+            registros.append(datos_del_juego)
 
-    if encontrado == False:
-        print(f"Agregando un nuevo registro para {datos_del_juego['Nombre']}")  
-        registros.append(datos_del_juego)
-
-    
     with open(ruta, "w", encoding="utf-8") as archivo:
         for fila in registros:
             print(f"Escribiendo en archivo: {fila}")  
