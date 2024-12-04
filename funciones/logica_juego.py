@@ -386,8 +386,9 @@ def iniciar_juego(pantalla: pygame.surface, nombre_jugador: str):
             pantalla.blit(texto_ganador, (480, 300))
             pygame.display.flip()
             pygame.time.delay(2500)
+            seguir = True
 
-            while True:
+            while seguir == True:
              pantalla.blit(fondo_mesa, [0, 0]) 
              texto_pregunta = fuente.render("jugar otra ronda?", True, negro)
              pantalla.blit(texto_pregunta, (450, 180))
@@ -433,6 +434,7 @@ def iniciar_juego(pantalla: pygame.surface, nombre_jugador: str):
                         
                      
                      if boton_no.collidepoint(event.pos):
+                            seguir = False
                             pygame.mixer.music.stop()
                             pygame.quit()
                             sys.exit()
