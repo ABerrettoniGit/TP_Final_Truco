@@ -1,39 +1,40 @@
-def guardar_record(ruta_archivo: str, datos_del_juego: dict) -> bool:
+def guardar_record(ruta_archivo: str, datos_del_juego: dict):
     '''
-    Guarda los datos del jugador en el archivo
-    Si el jugador ya existe, actualiza sus datos sumando los nuevos valores si no, lo agrega sin borrar los registros anteriores
+    Recibe la ruta de un archivo y un diccionario con información del juego.
+    Lee los registros existentes y los actualiza según los datos del juego.
     '''
     registros = leer_registros(ruta_archivo)
-    ruta = f"E:/UTN PYGAME/archivos/{ruta_archivo}"
 
-    print(f"Datos del juego a guardar: {datos_del_juego}")
-
+    usuario_encontrado = False
     for usuario in registros:
-        if datos_del_juego["Nombre"] == usuario["Nombre"]: 
-            usuario["Partidas ganadas"] += datos_del_juego["Partidas ganadas"]
-            usuario["Partidas perdidas"] += datos_del_juego["Partidas perdidas"]
-            usuario["Partidas empatadas"] += datos_del_juego["Partidas empatadas"]
-        else:
-            registros.append(datos_del_juego)
+        if usuario["Nombre"] == datos_del_juego["Nombre"]:
+            usuario["Partidas ganadas"] = int(usuario["Partidas ganadas"]) + int(datos_del_juego["Partidas ganadas"])
+            usuario["Partidas perdidas"] = int(usuario["Partidas perdidas"]) + int(datos_del_juego["Partidas perdidas"])
+            usuario["Partidas empatadas"] = int(usuario["Partidas empatadas"]) + int(datos_del_juego["Partidas empatadas"])
+            usuario_encontrado = True
+            break
 
+    if usuario_encontrado == False:
+        registros.append(datos_del_juego)
+
+    ruta = f"archivos/{ruta_archivo}"
     with open(ruta, "w", encoding="utf-8") as archivo:
         for fila in registros:
-            print(f"Escribiendo en archivo: {fila}")  
             linea = (
-                f"Nombre: {fila['Nombre']}, "
-                f"Partidas ganadas: {fila['Partidas ganadas']}, " 
-                f"Partidas perdidas: {fila['Partidas perdidas']}, " 
-                f"Partidas empatadas: {fila['Partidas empatadas']}\n"
+                f"{fila['Nombre']}, "
+                f"{fila['Partidas ganadas']}, "
+                f"{fila['Partidas perdidas']}, "
+                f"{fila['Partidas empatadas']}\n"
             )
             archivo.write(linea)
-    return True
+
 
 
 def leer_registros(ruta_archivo: str) -> list:
     '''
     Recibe una ruta de archivo
     Lee los registros desde el archivo
-    Devuelve una lista de diccionarios.
+    Devuelve como una lista de diccionarios.
     '''
     ruta = f"E:/UTN PYGAME/archivos/{ruta_archivo}"
     lista_retorno = []

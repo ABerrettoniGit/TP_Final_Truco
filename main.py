@@ -8,11 +8,11 @@ pygame.init()
 screen = pygame.display.set_mode((1280, 720))
 pygame.display.set_caption("Truco UTN")
 
-# Mostrar el menú principal
+
 while True:
-    accion = menu_principal(screen)  # Llama al menú principal y espera una acción
+    accion = menu_principal(screen)  
     if accion == "jugar":
-        iniciar_pantalla_principal()  # Inicia el juego
+        iniciar_pantalla_principal()  
     elif accion == "salir":
         pygame.quit()
         sys.exit()

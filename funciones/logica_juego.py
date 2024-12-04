@@ -19,14 +19,33 @@ y = 450
 
 borde_superior = 600 // 2
 
-def crear_mazo():
+tupla_valores = ("1", "2", "3", "4", "5", "6", "7", "10", "11", "12")
+tupla_palos = ("espada", "basto", "oro", "copa")
+
+jerarquia = {
+    ("1", "espada"): 14,
+    ("1", "basto"): 13,
+    ("7", "espada"): 12,
+    ("7", "oro"): 11,
+    ("3", None): 10,
+    ("2", None): 9,
+    ("1", "oro"): 8,
+    ("1", "copa"): 8,
+    ("12", None): 7,
+    ("11", None): 6,
+    ("10", None): 5,
+    ("7", "basto"): 4,
+    ("7", "copa"): 4,
+    ("6", None): 3,
+    ("5", None): 2,
+    ("4", None): 1,
+    }
+
+def crear_mazo(palos: tuple, valores: tuple) -> list:
         '''
         Crea el mazo de las cartas, se junta cada valor con cada palo
         Devuelve un mazo creado y mezclado
         '''
-
-        valores = ["1", "2", "3", "4", "5", "6", "7", "10", "11", "12"]
-        palos = ["espada", "basto", "oro", "copa"]
 
         mazo = [Carta(valor, palo) for palo in palos for valor in valores]
         random.shuffle(mazo)
@@ -39,25 +58,6 @@ def valor_carta(carta: Carta) -> int:
     Agrega valor a cada carta
     Devuelve el valor de la carta, si no se encuentra la carta en la jerarquia devuelve 0
     '''
-
-    jerarquia = {
-        ("1", "espada"): 14,
-        ("1", "basto"): 13,
-        ("7", "espada"): 12,
-        ("7", "oro"): 11,
-        ("3", None): 10,
-        ("2", None): 9,
-        ("1", "oro"): 8,
-        ("1", "copa"): 8,
-        ("12", None): 7,
-        ("11", None): 6,
-        ("10", None): 5,
-        ("7", "basto"): 4,
-        ("7", "copa"): 4,
-        ("6", None): 3,
-        ("5", None): 2,
-        ("4", None): 1,
-    }
 
     clave_especifica = (carta.valor, carta.palo)
 
@@ -139,8 +139,8 @@ def pantalla_inicio(pantalla: pygame.Surface) -> str:
     clock = pygame.time.Clock()
     input_box = pygame.Rect(400, 300, 400, 50)
     font = pygame.font.Font(None, 48)
-    color_inactivo = pygame.Color('gray')
-    color_activo = pygame.Color('white')
+    color_inactivo = gris
+    color_activo = blanco
     color = color_inactivo
     activo = False
     nombre = ""
@@ -212,7 +212,7 @@ def iniciar_juego(pantalla: pygame.surface, nombre_jugador: str):
 
     corriendo = True
 
-    mazo = crear_mazo()
+    mazo = crear_mazo(tupla_palos, tupla_valores)
     jugador1 = Jugador(nombre_jugador)
     jugador2 = Jugador("Bot")
 
@@ -263,9 +263,11 @@ def iniciar_juego(pantalla: pygame.surface, nombre_jugador: str):
 
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
+                pygame.mixer.music.stop()
                 pygame.quit()
                 sys.exit()
             if evento.type == pygame.KEYDOWN and evento.key == pygame.K_ESCAPE:
+                pygame.mixer.music.stop()
                 return
             if evento.type == pygame.MOUSEBUTTONDOWN and turno_jugador:
                 if boton_jugar_carta.collidepoint(evento.pos):
@@ -279,6 +281,7 @@ def iniciar_juego(pantalla: pygame.surface, nombre_jugador: str):
                         texto_truco = "Cantar retruco"
                     else:
                         jugador1.ganar_punto(1)
+                        puntos_a_ganar = 1
                         truco_cantado = True
 
                 if boton_rendirse.collidepoint(evento.pos): 
@@ -361,6 +364,9 @@ def iniciar_juego(pantalla: pygame.surface, nombre_jugador: str):
         texto_retruco = fuente.render(f"Truco: {respuesta_truco}", True, negro)
         if truco_cantado == True:
             pantalla.blit(texto_retruco, (80, 88))
+        
+        texto_puntaje = fuente.render(f"Puntaje: {jugador1.puntos}", True, negro)
+        pantalla.blit(texto_puntaje, (80, 20))
 
         # Verifica si la ronda actual es 3, si es asi, revisa los puntos de cada jugador. 
         if ronda_actual == 3:

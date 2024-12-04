@@ -1,0 +1,3 @@
+sacar lo que no va dentro de una funcion
+definir tuplas, lista, constante
+archivos
